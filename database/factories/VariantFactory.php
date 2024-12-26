@@ -14,6 +14,7 @@ class VariantFactory extends Factory
     {
         return [
             'product_id'     => Product::factory(), // Create a product if not already linked
+            'sku' => $this->faker->unique()->word(),
             'price'          => $this->faker->randomFloat(2, 10, 100), // Random price between 10 and 100
             'stock_quantity' => $this->faker->numberBetween(0, 100), // Random stock quantity
         ];

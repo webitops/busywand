@@ -66,6 +66,7 @@ class ProductSeeder extends Seeder
         foreach ($combinations as $combination) {
             $variant = $product->variants()->create([
                 'price'          => $product->price, // Default price, can be customized for each variant
+                'sku' => $product->sku . '-' . strtoupper(substr(uniqid(), -4)),
                 'stock_quantity' => rand(10, 100), // Random stock for testing
             ]);
 

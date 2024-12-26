@@ -11,12 +11,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $price
  * @property int $stock_quantity
  * @property-read Product $product
+ * @property string $sku
  */
 class Variant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'price', 'stock_quantity'];
+    protected $fillable = ['product_id', 'sku', 'price', 'stock_quantity'];
 
     protected $casts = [
         'price'          => 'float',
