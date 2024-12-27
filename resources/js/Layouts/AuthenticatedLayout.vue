@@ -15,9 +15,10 @@ const user = usePage().props.auth.user;
     Hello, {{ user.name }}
     <br />
     <div class="flex gap-3">
+        <Link :href="route('product.index')">Products</Link>
+        <span>|</span>
         <Link :href="route('logout')" method="post" as="button">Logout</Link>
         <Link :href="route('profile.edit')">Profile</Link>
-        <Link :href="route('product.index')">Products</Link>
     </div>
     <hr />
     <slot />
