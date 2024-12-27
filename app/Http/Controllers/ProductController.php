@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\ProductDTO;
+use App\Http\Resources\Product\MinimalProductResource;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class ProductController extends Controller
 
         //        dd($products[0]->variants[0]->attributes[0]->attribute->name, []);
         return Inertia::render('Products/Index', [
-            'products' => $products,
+            'products' => MinimalProductResource::collection($products),
         ]);
     }
 
