@@ -3,9 +3,13 @@
         <p>Index products</p>
         <ul>
             <li v-for="product in products.data" :key="product.id">
-                #{{ product.id }} {{ product.name }} -
-                {{ formatPrice(product.price) }} ({{ product.variants_count }}
-                variants)
+                <Link :href="route('product.show', product.id)">
+                    #{{ product.id }} {{ product.name }} -
+                    {{ formatPrice(product.price) }} ({{
+                        product.variants_count
+                    }}
+                    variants)
+                </Link>
             </li>
         </ul>
     </AuthenticatedLayout>
@@ -13,6 +17,7 @@
 
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Link from '@/Components/Link.vue';
 
 defineProps({
     products: Object,

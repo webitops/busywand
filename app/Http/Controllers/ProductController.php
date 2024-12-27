@@ -40,7 +40,7 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = Product::with('variants.attributes')->findOrFail($id);
+        $product = Product::with('variants.attributes.attribute')->findOrFail($id);
 
         return Inertia::render('Products/Show', [
             'product' => $product,
