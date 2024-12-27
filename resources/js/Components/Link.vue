@@ -10,8 +10,8 @@ defineProps({
 </script>
 
 <template>
-    <Link :href="route('login')" class="text-blue-500 hover:underline"
-        ><slot />
+    <Link :href="href" class="text-blue-500 hover:underline">
+        <slot />
     </Link>
 </template>
 

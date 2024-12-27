@@ -1,5 +1,6 @@
 <script setup>
-import { usePage, Link } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
+import Link from '@/Components/Link.vue';
 
 const user = usePage().props.auth.user;
 </script>
@@ -14,18 +15,9 @@ const user = usePage().props.auth.user;
     Hello, {{ user.name }}
     <br />
     <div class="flex gap-3">
-        <Link
-            class="text-blue-500 hover:underline"
-            :href="route('logout')"
-            method="post"
-            as="button"
-            >Logout
-        </Link>
-        <Link
-            class="text-blue-500 hover:underline"
-            :href="route('profile.edit')"
-            >Profile
-        </Link>
+        <Link :href="route('logout')" method="post" as="button">Logout</Link>
+        <Link :href="route('profile.edit')">Profile</Link>
+        <Link :href="route('products.index')">Products</Link>
     </div>
     <hr />
     <slot />
