@@ -1,16 +1,16 @@
 <?php
 
-use App\Models\Attribute;
-use App\Models\AttributeValue;
+use App\Models\Option;
+use App\Models\OptionValue;
 use App\Models\Product;
 use App\Models\Variant;
 
 it('can create a product', function () {
     $product = Product::factory()->create([
-        'name'        => 'T-Shirt',
-        'sku'         => 'TSHIRT123',
+        'name' => 'T-Shirt',
+        'sku' => 'TSHIRT123',
         'description' => 'Comfortable cotton T-shirt',
-        'price'       => 20.00,
+        'price' => 20.00,
     ]);
 
     expect($product->name)->toBe('T-Shirt');
@@ -31,8 +31,8 @@ it('can create a variant', function () {
     $product = Product::factory()->create();
 
     $variant = Variant::factory()->create([
-        'product_id'     => $product->id,
-        'price'          => 25.00,
+        'product_id' => $product->id,
+        'price' => 25.00,
         'stock_quantity' => 10,
     ]);
 
@@ -45,8 +45,8 @@ it('uses product price as fallback when variant price is null', function () {
     $product = \App\Models\Product::factory()->create(['price' => 30.00]);
 
     $variant = \App\Models\Variant::factory()->create([
-        'product_id'     => $product->id,
-        'price'          => null, // No specific price
+        'product_id' => $product->id,
+        'price' => null, // No specific price
         'stock_quantity' => 5,
     ]);
 
@@ -56,25 +56,24 @@ it('uses product price as fallback when variant price is null', function () {
     expect($variant->price)->toBe(30.00); // Falls back to product price
 });
 
-
-it('can create an attribute for a product', function () {
+it('can create an option for a product', function () {
     $product = Product::factory()->create();
 
-    $attribute = Attribute::create([
+    $option = Option::create([
         'product_id' => $product->id,
-        'name'       => 'Color',
+        'name' => 'Color',
     ]);
 
-    expect($attribute->product_id)->toBe($product->id);
-    expect($attribute->name)->toBe('Color');
+    expect($option->product_id)->toBe($product->id);
+    expect($option->name)->toBe('Color');
 });
 
-it('can retrieve associated attribute values', function () {
-    $attribute = Attribute::factory()->create(['name' => 'Size']);
-    AttributeValue::factory()->count(3)->create(['attribute_id' => $attribute->id]);
+it('can retrieve associated option values', function () {
+    $option = Option::factory()->create(['name' => 'Size']);
+    OptionValue::factory()->count(3)->create(['option_id' => $option->id]);
 
-    expect($attribute->values)->toHaveCount(3);
-    expect($attribute->values->first())->toBeInstanceOf(AttributeValue::class);
+    expect($option->values)->toHaveCount(3);
+    expect($option->values->first())->toBeInstanceOf(OptionValue::class);
 });
 
 it('deletes associated variants when a product is deleted', function () {
@@ -86,13 +85,13 @@ it('deletes associated variants when a product is deleted', function () {
     expect(Variant::where('product_id', $product->id)->count())->toBe(0);
 });
 
-it('deletes associated attribute values when an attribute is deleted', function () {
-    $attribute = Attribute::factory()->create();
-    AttributeValue::factory()->count(3)->create(['attribute_id' => $attribute->id]);
+it('deletes associated option values when an option is deleted', function () {
+    $option = Option::factory()->create();
+    OptionValue::factory()->count(3)->create(['option_id' => $option->id]);
 
-    $attribute->delete();
+    $option->delete();
 
-    expect(AttributeValue::where('attribute_id', $attribute->id)->count())->toBe(0);
+    expect(OptionValue::where('option_id', $option->id)->count())->toBe(0);
 });
 
 it('can update stock quantity for a variant', function () {

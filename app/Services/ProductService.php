@@ -37,28 +37,28 @@ class ProductService
     public function createVariant(Product $product, VariantDT0 $variantDTO): Variant
     {
         $variant = $product->variants()->create([
-            'sku' => $variantDTO->sku ?? $this->generateVariantSku($product, $variantDTO->attributes),
+            'sku' => $variantDTO->sku ?? $this->generateVariantSku($product, $variantDTO->options),
             'price' => $variantDTO->price,
             'stock_quantity' => $variantDTO->stock_quantity,
         ]);
 
-        // Handle variant attributes
-        foreach ($variantDTO->attributes as $key => $value) {
-            $attribute = $product->attributes()->firstOrCreate(['name' => $key]);
-            $attributeValue = $attribute->values()->firstOrCreate(['value' => $value]);
-            $variant->attributes()->attach($attributeValue->id);
+        // Handle variant options
+        foreach ($variantDTO->options as $key => $value) {
+            $option = $product->options()->firstOrCreate(['name' => $key]);
+            $optionValue = $option->values()->firstOrCreate(['value' => $value]);
+            $variant->options()->attach($optionValue->id);
         }
 
         return $variant;
     }
 
     /**
-     * Generate a SKU for a variant based on product SKU and attributes.
+     * Generate a SKU for a variant based on product SKU and options.
      */
-    protected function generateVariantSku(Product $product, array $attributes): string
+    protected function generateVariantSku(Product $product, array $options): string
     {
-        $attributeValues = array_map(fn ($key, $value) => strtoupper($key).'-'.strtoupper($value), array_keys($attributes), $attributes);
+        $optionValues = array_map(fn ($key, $value) => strtoupper($key).'-'.strtoupper($value), array_keys($options), $options);
 
-        return $product->sku.'-'.implode('-', $attributeValues);
+        return $product->sku.'-'.implode('-', $optionValues);
     }
 }

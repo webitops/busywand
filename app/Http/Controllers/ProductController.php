@@ -25,9 +25,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('variants.attributes.attribute')->paginate(10);
+        $products = Product::with('variants.options.option')->paginate(10);
 
-        //        dd($products[0]->variants[0]->attributes[0]->attribute->name, []);
+        //        dd($products[0]->variants[0]->options[0]->option->name, []);
         return Inertia::render('Products/Index', [
             'products' => MinimalProductResource::collection($products),
         ]);
@@ -40,7 +40,7 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = Product::with('variants.attributes.attribute')->findOrFail($id);
+        $product = Product::with('variants.options.option')->findOrFail($id);
 
         return Inertia::render('Products/Show', [
             'product' => $product,
@@ -63,7 +63,7 @@ class ProductController extends Controller
             'variants.*.sku' => 'nullable|string|unique:variants,sku',
             'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.stock_quantity' => 'required|integer|min:0',
-            'variants.*.attributes' => 'nullable|array',
+            'variants.*.options' => 'nullable|array',
         ]);
 
         $productDTO = ProductDTO::fromRequest($data);

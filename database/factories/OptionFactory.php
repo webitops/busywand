@@ -2,20 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\Attribute;
+use App\Models\Option;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class AttributeFactory extends Factory
+class OptionFactory extends Factory
 {
-    protected $model = Attribute::class;
+    protected $model = Option::class;
 
     public function definition()
     {
         return [
             'product_id' => Product::factory(), // Create a related product
-            'name'       => $this->faker->randomElement(['Color', 'Size', 'Material']), // Random attribute name
+            'name' => $this->faker->randomElement(['Color', 'Size', 'Material']), // Random option name
         ];
     }
 }
-

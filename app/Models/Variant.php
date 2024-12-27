@@ -20,13 +20,13 @@ class Variant extends Model
     protected $fillable = ['product_id', 'sku', 'price', 'stock_quantity'];
 
     protected $casts = [
-        'price'          => 'float',
+        'price' => 'float',
         'stock_quantity' => 'integer',
     ];
 
-    public function attributes()
+    public function options()
     {
-        return $this->belongsToMany(AttributeValue::class, 'variant_attributes');
+        return $this->belongsToMany(OptionValue::class, 'variant_options');
     }
 
     public function product()

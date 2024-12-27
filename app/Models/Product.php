@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $sku
  * @property string|null $description
  * @property float $price
- * @property \Illuminate\Database\Eloquent\Collection|Attribute[] $attributes
+ * @property \Illuminate\Database\Eloquent\Collection|Option[] $options
  * @property \Illuminate\Database\Eloquent\Collection|Variant[] $variants
  */
 class Product extends Model
@@ -20,9 +20,9 @@ class Product extends Model
 
     protected $fillable = ['name', 'sku', 'description', 'price'];
 
-    public function attributes()
+    public function options()
     {
-        return $this->hasMany(Attribute::class);
+        return $this->hasMany(Option::class);
     }
 
     public function variants()

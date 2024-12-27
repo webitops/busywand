@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * @property int $id
  * @property int $product_id
  * @property string $name
  */
-class Attribute extends Model
+class Option extends Model
 {
     use HasFactory;
 
@@ -19,6 +18,6 @@ class Attribute extends Model
 
     public function values()
     {
-        return $this->hasMany(AttributeValue::class);
+        return $this->hasMany(OptionValue::class);
     }
 }
