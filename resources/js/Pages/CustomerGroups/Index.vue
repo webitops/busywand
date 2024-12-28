@@ -1,6 +1,5 @@
 <template>
     <AuthenticatedLayout>
-        <!-- Header Section -->
         <h3 class="text-lg font-medium">Customer Groups</h3>
 
         <hr />
