@@ -1,6 +1,6 @@
 <template>
     <AuthenticatedLayout>
-        <p>Index products</p>
+        <h1 class="text-xl font-bold">Index Products</h1>
         <ul>
             <li v-for="product in products.data" :key="product.id">
                 <Link :href="route('product.show', product.id)">

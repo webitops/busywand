@@ -8,7 +8,7 @@ defineProps({
 
 <template>
     <AuthenticatedLayout>
-        Show product: {{ product.name }}
+        <h1 class="text-xl font-bold">Show product: {{ product.name }}</h1>
         <ul>
             <li
                 class="odd:bg-gray-100"
