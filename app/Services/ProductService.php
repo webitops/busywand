@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\DTOs\ProductDTO;
-use App\DTOs\VariantDT0;
+use App\DTOs\VariantDTO;
 use App\Models\Product;
 use App\Models\Variant;
 
@@ -24,7 +24,7 @@ class ProductService
 
         // Create variants if provided
         foreach ($productDTO->variants as $variantData) {
-            $variantDTO = VariantDT0::fromRequest($variantData);
+            $variantDTO = VariantDTO::fromRequest($variantData);
             $this->createVariant($product, $variantDTO);
         }
 
@@ -34,7 +34,7 @@ class ProductService
     /**
      * Create a variant for a product.
      */
-    public function createVariant(Product $product, VariantDT0 $variantDTO): Variant
+    public function createVariant(Product $product, VariantDTO $variantDTO): Variant
     {
         $variant = $product->variants()->create([
             'sku' => $variantDTO->sku ?? $this->generateVariantSku($product, $variantDTO->options),
