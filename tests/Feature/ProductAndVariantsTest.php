@@ -16,8 +16,8 @@ it('can create a category', function () {
         'slug' => 'clothing',
     ]);
 
-    expect($category->name)->toBe('Clothing');
-    expect($category->slug)->toBe('clothing');
+    expect($category->name)->toBe('Clothing')
+        ->and($category->slug)->toBe('clothing');
 });
 
 it('can attach a category to a product', function () {
@@ -29,8 +29,8 @@ it('can attach a category to a product', function () {
 
     $product->categories()->attach($category);
 
-    expect($product->categories)->toHaveCount(1);
-    expect($product->categories->first()->name)->toBe('Footwear');
+    expect($product->categories)->toHaveCount(1)
+        ->and($product->categories->first()->name)->toBe('Footwear');
 });
 
 it('can create a parent-child category structure', function () {
@@ -45,8 +45,8 @@ it('can create a parent-child category structure', function () {
         'category_id' => $parent->id,
     ]);
 
-    expect($parent->children)->toHaveCount(1);
-    expect($child->parent->name)->toBe('Parent Category');
+    expect($parent->children)->toHaveCount(1)
+        ->and($child->parent->name)->toBe('Parent Category');
 });
 
 it('can create a product', function () {
@@ -57,18 +57,18 @@ it('can create a product', function () {
         'price' => 20.00,
     ]);
 
-    expect($product->name)->toBe('T-Shirt');
-    expect($product->sku)->toBe('TSHIRT123');
-    expect($product->description)->toBe('Comfortable cotton T-shirt');
-    expect($product->price)->toBe(20.00);
+    expect($product->name)->toBe('T-Shirt')
+        ->and($product->sku)->toBe('TSHIRT123')
+        ->and($product->description)->toBe('Comfortable cotton T-shirt')
+        ->and($product->price)->toBe(20.00);
 });
 
 it('can retrieve associated variants', function () {
     $product = Product::factory()->create();
     Variant::factory()->count(3)->create(['product_id' => $product->id]);
 
-    expect($product->variants)->toHaveCount(3);
-    expect($product->variants->first())->toBeInstanceOf(Variant::class);
+    expect($product->variants)->toHaveCount(3)
+        ->and($product->variants->first())->toBeInstanceOf(Variant::class);
 });
 
 it('can create a variant', function () {
@@ -80,9 +80,9 @@ it('can create a variant', function () {
         'stock_quantity' => 10,
     ]);
 
-    expect($variant->product_id)->toBe($product->id);
-    expect($variant->price)->toBe(25.00);
-    expect($variant->stock_quantity)->toBe(10);
+    expect($variant->product_id)->toBe($product->id)
+        ->and($variant->price)->toBe(25.00)
+        ->and($variant->stock_quantity)->toBe(10);
 });
 
 it('uses product price as fallback when variant price is null', function () {
@@ -108,16 +108,16 @@ it('can create an option for a product', function () {
         'name' => 'Color',
     ]);
 
-    expect($option->product_id)->toBe($product->id);
-    expect($option->name)->toBe('Color');
+    expect($option->product_id)->toBe($product->id)
+        ->and($option->name)->toBe('Color');
 });
 
 it('can retrieve associated option values', function () {
     $option = Option::factory()->create(['name' => 'Size']);
     OptionValue::factory()->count(3)->create(['option_id' => $option->id]);
 
-    expect($option->values)->toHaveCount(3);
-    expect($option->values->first())->toBeInstanceOf(OptionValue::class);
+    expect($option->values)->toHaveCount(3)
+        ->and($option->values->first())->toBeInstanceOf(OptionValue::class);
 });
 
 it('deletes associated variants when a product is deleted', function () {
@@ -158,6 +158,6 @@ it('can create products and variants using factories', function () {
 it('runs the ProductSeeder correctly', function () {
     $this->seed(ProductSeeder::class);
 
-    expect(Product::count())->toBeGreaterThan(0);
-    expect(Variant::count())->toBeGreaterThan(0);
+    expect(Product::count())->toBeGreaterThan(0)
+        ->and(Variant::count())->toBeGreaterThan(0);
 });

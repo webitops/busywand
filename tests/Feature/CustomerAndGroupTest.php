@@ -14,10 +14,10 @@ it('can create a customer', function () {
         'phone' => '1234567890',
     ]);
 
-    expect($customer)->toBeInstanceOf(Customer::class);
-    expect($customer->name)->toBe('John Doe');
-    expect($customer->email)->toBe('johndoe@example.com');
-    expect($customer->phone)->toBe('1234567890');
+    expect($customer)->toBeInstanceOf(Customer::class)
+        ->and($customer->name)->toBe('John Doe')
+        ->and($customer->email)->toBe('johndoe@example.com')
+        ->and($customer->phone)->toBe('1234567890');
 });
 
 it('can update a customer', function () {
@@ -29,9 +29,9 @@ it('can update a customer', function () {
         'phone' => '9876543210',
     ]);
 
-    expect($customer->fresh()->name)->toBe('Jane Doe');
-    expect($customer->fresh()->email)->toBe('janedoe@example.com');
-    expect($customer->fresh()->phone)->toBe('9876543210');
+    expect($customer->fresh()->name)->toBe('Jane Doe')
+        ->and($customer->fresh()->email)->toBe('janedoe@example.com')
+        ->and($customer->fresh()->phone)->toBe('9876543210');
 });
 
 it('can delete a customer', function () {
@@ -58,9 +58,9 @@ it('can create a customer group', function () {
         'description' => 'Very Important People',
     ]);
 
-    expect($group)->toBeInstanceOf(CustomerGroup::class);
-    expect($group->name)->toBe('VIP');
-    expect($group->description)->toBe('Very Important People');
+    expect($group)->toBeInstanceOf(CustomerGroup::class)
+        ->and($group->name)->toBe('VIP')
+        ->and($group->description)->toBe('Very Important People');
 });
 
 it('can update a customer group', function () {
@@ -71,8 +71,8 @@ it('can update a customer group', function () {
         'description' => 'Premium Customers',
     ]);
 
-    expect($group->fresh()->name)->toBe('Premium');
-    expect($group->fresh()->description)->toBe('Premium Customers');
+    expect($group->fresh()->name)->toBe('Premium')
+        ->and($group->fresh()->description)->toBe('Premium Customers');
 });
 
 it('can delete a customer group', function () {
