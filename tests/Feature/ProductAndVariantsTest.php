@@ -1,9 +1,53 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Option;
 use App\Models\OptionValue;
 use App\Models\Product;
 use App\Models\Variant;
+use Database\Seeders\ProductSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+it('can create a category', function () {
+    $category = Category::create([
+        'name' => 'Clothing',
+        'slug' => 'clothing',
+    ]);
+
+    expect($category->name)->toBe('Clothing');
+    expect($category->slug)->toBe('clothing');
+});
+
+it('can attach a category to a product', function () {
+    $product = Product::factory()->create();
+    $category = Category::create([
+        'name' => 'Footwear',
+        'slug' => 'footwear',
+    ]);
+
+    $product->categories()->attach($category);
+
+    expect($product->categories)->toHaveCount(1);
+    expect($product->categories->first()->name)->toBe('Footwear');
+});
+
+it('can create a parent-child category structure', function () {
+    $parent = Category::create([
+        'name' => 'Parent Category',
+        'slug' => 'parent-category',
+    ]);
+
+    $child = Category::create([
+        'name' => 'Child Category',
+        'slug' => 'child-category',
+        'category_id' => $parent->id,
+    ]);
+
+    expect($parent->children)->toHaveCount(1);
+    expect($child->parent->name)->toBe('Parent Category');
+});
 
 it('can create a product', function () {
     $product = Product::factory()->create([
@@ -42,9 +86,9 @@ it('can create a variant', function () {
 });
 
 it('uses product price as fallback when variant price is null', function () {
-    $product = \App\Models\Product::factory()->create(['price' => 30.00]);
+    $product = Product::factory()->create(['price' => 30.00]);
 
-    $variant = \App\Models\Variant::factory()->create([
+    $variant = Variant::factory()->create([
         'product_id' => $product->id,
         'price' => null, // No specific price
         'stock_quantity' => 5,
@@ -112,7 +156,7 @@ it('can create products and variants using factories', function () {
 });
 
 it('runs the ProductSeeder correctly', function () {
-    $this->seed(\Database\Seeders\ProductSeeder::class);
+    $this->seed(ProductSeeder::class);
 
     expect(Product::count())->toBeGreaterThan(0);
     expect(Variant::count())->toBeGreaterThan(0);

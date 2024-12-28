@@ -6,8 +6,10 @@ use App\DTOs\ProductDTO;
 use App\Http\Resources\Product\MinimalProductResource;
 use App\Models\Product;
 use App\Services\ProductService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
@@ -21,7 +23,7 @@ class ProductController extends Controller
     /**
      * Display a list of products with their variants.
      *
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -36,7 +38,7 @@ class ProductController extends Controller
     /**
      * Show a single product with its variants.
      *
-     * @return \Inertia\Response
+     * @return Response
      */
     public function show(int $id)
     {
@@ -50,7 +52,7 @@ class ProductController extends Controller
     /**
      * Store a new product with variants.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {

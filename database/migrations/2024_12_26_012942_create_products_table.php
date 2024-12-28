@@ -16,10 +16,18 @@ class CreateProductsTable extends Migration
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });
+
+        Schema::create('category_product', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     public function down()
     {
+        Schema::dropIfExists('category_product');
         Schema::dropIfExists('products');
     }
 }

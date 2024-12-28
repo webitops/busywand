@@ -2,20 +2,22 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
+use Str;
 
 class ProductSeeder extends Seeder
 {
     public function run()
     {
-        // Create several products
         $products = [
             [
                 'name' => 'T-Shirt',
                 'sku' => 'TSHIRT123',
                 'description' => 'Comfortable cotton T-Shirt',
                 'price' => 20.00,
+                'categories' => ['Clothing', 'Summer'], // Add categories here
                 'options' => [
                     'Color' => ['Red', 'Blue', 'Green'],
                     'Size' => ['S', 'M', 'L', 'XL'],
@@ -26,6 +28,7 @@ class ProductSeeder extends Seeder
                 'sku' => 'SNKR456',
                 'description' => 'Stylish sneakers for daily wear',
                 'price' => 50.00,
+                'categories' => ['Footwear'],
                 'options' => [
                     'Color' => ['Black', 'White'],
                     'Size' => ['8', '9', '10', '11'],
@@ -40,7 +43,6 @@ class ProductSeeder extends Seeder
 
     private function createProductWithVariants(array $productData)
     {
-        // Create the product
         $product = Product::create([
             'name' => $productData['name'],
             'sku' => $productData['sku'],
@@ -48,29 +50,35 @@ class ProductSeeder extends Seeder
             'price' => $productData['price'],
         ]);
 
-        // Create options and their values
+        // Attach categories
+        if (! empty($productData['categories'])) {
+            foreach ($productData['categories'] as $catName) {
+                $category = Category::firstOrCreate(
+                    ['slug' => Str::slug($catName)],
+                    ['name' => $catName]
+                );
+                $product->categories()->attach($category->id);
+            }
+        }
+
+        // Create options
         $optionValueIds = [];
         foreach ($productData['options'] as $optionName => $optionValues) {
             $option = $product->options()->create(['name' => $optionName]);
-
             foreach ($optionValues as $value) {
                 $optionValue = $option->values()->create(['value' => $value]);
                 $optionValueIds[$optionName][] = $optionValue->id;
             }
         }
 
-        // Generate all possible combinations of options
+        // Variants
         $combinations = $this->generateCombinations(array_values($optionValueIds));
-
-        // Create variants for each combination
         foreach ($combinations as $combination) {
             $variant = $product->variants()->create([
-                'price' => $product->price, // Default price, can be customized for each variant
+                'price' => $product->price,
                 'sku' => $product->sku.'-'.strtoupper(substr(uniqid(), -4)),
-                'stock_quantity' => rand(10, 100), // Random stock for testing
+                'stock_quantity' => rand(10, 100),
             ]);
-
-            // Attach option values to the variant
             $variant->options()->attach($combination);
         }
     }
