@@ -17,6 +17,7 @@ const user = usePage().props.auth.user;
     <div class="flex gap-3">
         <Link :href="route('product.index')">Products</Link>
         <Link :href="route('categories.index')">Categories</Link>
+        <Link :href="route('customer_groups.index')">Customer Groups</Link>
         <span>|</span>
         <Link :href="route('logout')" method="post" as="button">Logout</Link>
         <Link :href="route('profile.edit')">Profile</Link>
