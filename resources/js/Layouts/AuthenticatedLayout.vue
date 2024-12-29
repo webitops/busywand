@@ -5,29 +5,36 @@ import Link from '@/Components/Link.vue';
 const user = usePage().props.auth.user;
 </script>
 <template>
-    <Link
-        class="text-xl font-bold text-blue-500 hover:underline"
-        :href="route('dashboard')"
-    >
-        Backend</Link
-    >
-    <br />
-    Hello, {{ user.name }}
-    <br />
-    <div class="flex gap-3">
-        <Link :href="route('products.index')">Products</Link>
-        |
-        <Link :href="route('categories.index')">Categories</Link>
-        |
-        <Link :href="route('customers.index')">Customers</Link>
-        |
-        <Link :href="route('customer_groups.index')">Customer Groups</Link>
-        |
-        <Link :href="route('order-statuses.index')">Order Statuses</Link>
-        <span>|</span>
-        <Link :href="route('logout')" method="post" as="button">Logout</Link>
-        <Link :href="route('profile.edit')">Profile</Link>
+    <div class="flex">
+        <div class="w-64 bg-white p-4">
+            <Link
+                class="text-xl font-bold text-blue-500 hover:underline"
+                :href="route('dashboard')"
+            >
+                Backend
+            </Link>
+            <br />
+            Hello, {{ user.name }}
+            <hr class="separator" />
+            <div class="flex flex-col gap-1">
+                <Link :href="route('products.index')">Products</Link>
+                <Link :href="route('categories.index')">Categories</Link>
+                <Link :href="route('customers.index')">Customers</Link>
+                <Link :href="route('customer_groups.index')"
+                    >Customer Groups
+                </Link>
+                <Link :href="route('order-statuses.index')"
+                    >Order Statuses
+                </Link>
+                <hr class="separator" />
+                <Link :href="route('logout')" method="post" as="button"
+                    >Logout
+                </Link>
+                <Link :href="route('profile.edit')">Profile</Link>
+            </div>
+        </div>
+        <div class="flex-1 p-4">
+            <slot />
+        </div>
     </div>
-    <hr />
-    <slot />
 </template>
