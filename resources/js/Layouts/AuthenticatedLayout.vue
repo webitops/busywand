@@ -22,6 +22,8 @@ const user = usePage().props.auth.user;
         <Link :href="route('customers.index')">Customers</Link>
         |
         <Link :href="route('customer_groups.index')">Customer Groups</Link>
+        |
+        <Link :href="route('order-statuses.index')">Order Statuses</Link>
         <span>|</span>
         <Link :href="route('logout')" method="post" as="button">Logout</Link>
         <Link :href="route('profile.edit')">Profile</Link>

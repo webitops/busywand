@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
+use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/{customerGroup}', [CustomerGroupController::class, 'update'])->name('update');
         Route::delete('/{customerGroup}', [CustomerGroupController::class, 'destroy'])->name('destroy');
     });
+
+    Route::resource('order-statuses', OrderStatusController::class);
 
 });
 
