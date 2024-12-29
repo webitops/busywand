@@ -17,6 +17,7 @@ const user = usePage().props.auth.user;
             Hello, {{ user.name }}
             <hr class="separator" />
             <div class="flex flex-col gap-1">
+                <Link :href="route('orders.index')">Orders</Link>
                 <Link :href="route('products.index')">Products</Link>
                 <Link :href="route('categories.index')">Categories</Link>
                 <Link :href="route('customers.index')">Customers</Link>

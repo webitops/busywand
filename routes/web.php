@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -50,6 +51,16 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::resource('order-statuses', OrderStatusController::class);
+
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('orders.index'); // List orders
+        Route::get('/create', [OrderController::class, 'create'])->name('orders.create'); // Show create form
+        Route::post('/', [OrderController::class, 'store'])->name('orders.store'); // Store order
+        Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show'); // Show single order
+        Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit'); // Show edit form
+        Route::put('/{order}', [OrderController::class, 'update'])->name('orders.update'); // Update order
+        Route::delete('/{order}', [OrderController::class, 'destroy'])->name('orders.destroy'); // Delete order
+    });
 
 });
 
