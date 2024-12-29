@@ -20,9 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/products', [ProductController::class, 'index'])->name('product.index');
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('product.show');
-    Route::post('/products', [ProductController::class, 'store'])->name('product.store');
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

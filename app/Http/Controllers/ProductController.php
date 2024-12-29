@@ -74,4 +74,22 @@ class ProductController extends Controller
         return redirect()->route('products.index')
             ->with('success', 'Product created successfully!');
     }
+
+    /**
+     * Remove the specified product and its associated variants.
+     *
+     * @param  int  $id
+     * @return RedirectResponse
+     */
+    public function destroy(Product $product)
+    {
+        sleep(1);
+
+        return to_route('products.index');
+        // Ensure related resources are deleted (e.g., variants)
+        $product->variants()->delete();
+        $product->delete();
+
+        return to_route('products.index');
+    }
 }

@@ -3,12 +3,20 @@
         <h1 class="text-xl font-bold">Index Products</h1>
         <ul>
             <li v-for="product in products.data" :key="product.id">
-                <Link :href="route('product.show', product.id)">
+                <Link :href="route('products.show', product.id)">
                     #{{ product.id }} {{ product.name }} -
                     {{ formatPrice(product.price) }} ({{
                         product.variants_count
                     }}
                     variants)
+                </Link>
+                <Link
+                    :href="route('products.destroy', product.id)"
+                    as="button"
+                    method="delete"
+                    class="text-red-500"
+                >
+                    Delete
                 </Link>
             </li>
         </ul>
@@ -32,3 +40,13 @@ const formatPrice = (price) => {
     return `$${numericPrice.toFixed(2)}`;
 };
 </script>
+
+<style scoped>
+/*[data-loading] {
+    visibility: hidden;
+}
+[data-loading]::after {
+    content: 'Loading...';
+    visibility: visible;
+}*/
+</style>
