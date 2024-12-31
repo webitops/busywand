@@ -18,6 +18,22 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
+    public function updateOrderStatus(Order $order)
+    {
+        $validated = request()->validate([
+            'status_id' => 'required|exists:order_statuses,id',
+        ]);
+
+        if (! $order->status->allowedNextStatuses->contains($validated['status_id'])) {
+            throw new \Exception('Invalid status');
+        }
+
+        $order->status_id = $validated['status_id'];
+        $order->save();
+
+        return to_route('orders.show', $order);
+    }
+
     /**
      * Display a listing of the orders.
      */
@@ -73,6 +89,8 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order->load(['customer', 'status', 'items']);
+
+        $order->status->load('allowedNextStatuses');
 
         return Inertia::render('Orders/Show', [
             'order' => $order,

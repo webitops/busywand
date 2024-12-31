@@ -1,9 +1,23 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { useForm } from '@inertiajs/vue3';
 
-defineProps({
+const props = defineProps({
     order: Object,
 });
+
+let statusForm = useForm({
+    status_id: null,
+});
+
+const updateOrderStatus = () => {
+    statusForm.put(route('orders.update-order-status', props.order.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            statusForm.reset();
+        },
+    });
+};
 
 const formatPrice = (price) => {
     const numericPrice = Number(price);
@@ -21,7 +35,35 @@ const formatPrice = (price) => {
         <hr class="separator" />
         <ul>
             <li>Number: #{{ order.order_number }}</li>
-            <li>Status: {{ order.status.name }}</li>
+            <li>
+                Status: {{ order.status.name }}
+                <span
+                    class="text-xs"
+                    v-if="order.status.allowed_next_statuses?.length > 0"
+                >
+                    <select
+                        class="rounded border border-gray-300 text-sm"
+                        v-model="statusForm.status_id"
+                        @change="updateOrderStatus"
+                    >
+                        <option :value="null" disabled>- Next status -</option>
+                        <option
+                            :value="nextStatus.id"
+                            v-for="nextStatus in order.status
+                                .allowed_next_statuses"
+                            :key="nextStatus.id"
+                        >
+                            {{ nextStatus.name }}
+                        </option>
+                    </select>
+                    <div
+                        v-if="statusForm.errors.status_id"
+                        class="text-red-500"
+                    >
+                        {{ statusForm.errors.status_id }}
+                    </div>
+                </span>
+            </li>
             <li>Customer: {{ order.customer.name }}</li>
             <li>{{ order.customer.email }}</li>
             <li>{{ order.customer.phone }}</li>

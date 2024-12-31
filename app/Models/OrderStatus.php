@@ -52,6 +52,6 @@ class OrderStatus extends Model
             'order_status_transitions',
             'from_status_id',
             'to_status_id'
-        );
+        )->orderBy('order_column');
     }
 }

@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit'); // Show edit form
         Route::put('/{order}', [OrderController::class, 'update'])->name('orders.update'); // Update order
         Route::delete('/{order}', [OrderController::class, 'destroy'])->name('orders.destroy'); // Delete order
+
+        Route::put('/update-order-status/{order}', [OrderController::class, 'updateOrderStatus'])->name('orders.update-order-status');
     });
 
 });
