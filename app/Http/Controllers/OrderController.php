@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CustomerResource;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Services\OrderService;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,7 +29,7 @@ class OrderController extends Controller
         ]);
 
         if (! $order->status->allowedNextStatuses->contains($validated['status_id'])) {
-            throw new \Exception('Invalid status');
+            throw new Exception('Invalid status');
         }
 
         $order->status_id = $validated['status_id'];
@@ -53,10 +57,18 @@ class OrderController extends Controller
     {
         $statuses = OrderStatus::all();
         $customers = Customer::all();
+        $categories = Category::all()->load('products.variants', 'products.categories');
 
         return Inertia::render('Orders/Create', [
-            'statuses' => $statuses,
-            'customers' => $customers,
+            'statuses' => $statuses->map->only('id', 'name', 'description'),
+            'customers' => CustomerResource::collection($customers)
+                ->only(['id', 'name', 'email']),
+            'categories' => CategoryResource::collection($categories)
+                ->only([
+                    'id',
+                    'name',
+                    'products',
+                ]),
         ]);
     }
 

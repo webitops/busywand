@@ -26,19 +26,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Link from '@/Components/Link.vue';
+import { formatPrice } from '@/Helpers/helpers.js';
 
 defineProps({
     products: Object,
 });
-
-const formatPrice = (price) => {
-    const numericPrice = Number(price);
-    if (isNaN(numericPrice)) {
-        return 'Invalid Price';
-    }
-
-    return `$${numericPrice.toFixed(2)}`;
-};
 </script>
 
 <style scoped>

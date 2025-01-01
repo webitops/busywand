@@ -3,13 +3,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Link from '@/Components/Link.vue';
 
 defineProps({
-    orders: Array,
+    orders: Object,
 });
 </script>
 
 <template>
     <AuthenticatedLayout>
         <h1 class="text-bold text-lg">Index Orders</h1>
+        <Link :href="route('orders.create')">Add order</Link>
         <hr class="separator" />
         <div>
             <ul>
