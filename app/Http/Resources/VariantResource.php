@@ -21,6 +21,7 @@ class VariantResource extends JsonResource
             'id' => $this->id,
             'sku' => $this->sku,
             'price' => $this->price,
+            'product' => $this->product,
         ], $onlyFields);
     }
 }

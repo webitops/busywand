@@ -5,7 +5,7 @@ import Link from '@/Components/Link.vue';
 const user = usePage().props.auth.user;
 </script>
 <template>
-    <div class="flex">
+    <div class="flex h-full">
         <div class="w-64 bg-white p-4">
             <Link
                 class="text-xl font-bold text-blue-500 hover:underline"
@@ -34,7 +34,7 @@ const user = usePage().props.auth.user;
                 <Link :href="route('profile.edit')">Profile</Link>
             </div>
         </div>
-        <div class="flex-1 p-4">
+        <div class="h-full flex-1 p-4">
             <slot />
         </div>
     </div>
