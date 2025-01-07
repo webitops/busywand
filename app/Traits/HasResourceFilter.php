@@ -31,13 +31,13 @@ trait HasResourceFilter
 
     protected function applyFieldsFilter(array $default_fields, ?array $onlyFieldsForCollection): array
     {
-        return $this->onlyFields ?
+        return array_map(fn ($item) => is_callable($item) ? $item() : $item, $this->onlyFields ?
             array_filter($default_fields,
                 fn ($key) => in_array($key, $this->onlyFields ?? []), ARRAY_FILTER_USE_KEY)
             : (
                 $onlyFieldsForCollection
                     ? array_filter($default_fields,
                         fn ($key) => in_array($key, $onlyFieldsForCollection ?? []), ARRAY_FILTER_USE_KEY)
-                    : $default_fields);
+                    : $default_fields));
     }
 }

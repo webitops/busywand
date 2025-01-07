@@ -21,9 +21,9 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'price' => $this->price,
-            'categories' => CategoryResource::collection($this->categories)->only(['id', 'name']),
-            'variants_count' => $this->variants->count(),
-            'variants' => VariantResource::collection($this->variants)->only(['id', 'sku', 'price', 'product']),
+            'categories' => fn () => CategoryResource::collection($this->categories)->only(['id', 'name']),
+            'variants_count' => fn () => $this->variants->count(),
+            'variants' => fn () => VariantResource::collection($this->variants)->only(['id', 'sku', 'price', 'product']),
         ], $filterFields);
     }
 }

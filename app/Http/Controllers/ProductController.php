@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\ProductDTO;
-use App\Http\Resources\Product\MinimalProductResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
@@ -27,11 +27,21 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('variants.options.option')->paginate(10);
+        $products = Product::with(
+            'variants.options.option',
+            'variants.product',
+        )->paginate(10);
 
         //        dd($products[0]->variants[0]->options[0]->option->name, []);
         return Inertia::render('Products/Index', [
-            'products' => MinimalProductResource::collection($products),
+            'products' => ProductResource::collection($products)
+                ->only([
+                    'id',
+                    'name',
+                    'price',
+                    'variants_count',
+                    'variants',
+                ]),
         ]);
     }
 

@@ -20,7 +20,7 @@ class CategoryResource extends JsonResource
         return $this->applyFieldsFilter([
             'id' => $this->id,
             'name' => $this->name,
-            'products' => ProductResource::collection($this->products)
+            'products' => fn () => ProductResource::collection($this->products)
                 ->only(
                     ['id', 'name', 'variants']
                 ),

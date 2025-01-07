@@ -11,8 +11,8 @@ const props = defineProps({
 });
 
 let productPicker = ref({
-    selectedCategory: null,
-    selectedProduct: null,
+    selectedCategory: props.categories.data[0],
+    selectedProduct: props.categories.data[0]?.products[0],
 });
 
 let form = useForm({
