@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +20,7 @@ class CustomerController extends Controller
         $customers = Customer::with('customerGroups')->paginate(10);
 
         return Inertia::render('Customers/Index', [
-            'customers' => $customers,
+            'customers' => CustomerResource::collection($customers)->only(['id', 'name', 'customer_groups']),
         ]);
     }
 

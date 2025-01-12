@@ -24,7 +24,7 @@
         </form>
         <!-- Category List -->
         <ul class="mt-4">
-            <li v-for="cat in categories" :key="cat.id">
+            <li v-for="cat in categories.data" :key="cat.id">
                 {{ cat.name }}
                 <button
                     class="text-red-500"
@@ -50,7 +50,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 defineProps({
     categories: {
         type: Array,
-        default: () => [],
     },
 });
 

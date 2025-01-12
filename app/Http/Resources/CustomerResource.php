@@ -2,26 +2,19 @@
 
 namespace App\Http\Resources;
 
-use App\Traits\HasResourceFilter;
+use App\Customization\FilterableJsonResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class CustomerResource extends JsonResource
+class CustomerResource extends FilterableJsonResource
 {
-    use HasResourceFilter;
-
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request, ?array $onlyFieldsForCollection = null): array
+    public function defaultToArray(Request $request): array
     {
-        return $this->applyFieldsFilter([
+        return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-        ], $onlyFieldsForCollection);
+            'customer_groups' => fn () => $this->customerGroups,
+        ];
     }
 }

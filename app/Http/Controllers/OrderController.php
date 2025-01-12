@@ -57,7 +57,7 @@ class OrderController extends Controller
     {
         $statuses = OrderStatus::all();
         $customers = Customer::all();
-        $categories = Category::all()->load('products.variants.product', 'products.categories');
+        $categories = Category::all()->load('products.variants', 'products.categories');
 
         return Inertia::render('Orders/Create', [
             'statuses' => $statuses->map->only('id', 'name', 'description'),

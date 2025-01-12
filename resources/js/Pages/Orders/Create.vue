@@ -102,7 +102,7 @@ let form = useForm({
                             :key="variant.id"
                         >
                             <td class="border border-gray-300 px-2 py-1">
-                                {{ key }}
+                                {{ key + 1 }}
                             </td>
                             <td class="border border-gray-300 px-2 py-1">
                                 {{ variant.product.name }}

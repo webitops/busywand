@@ -7,22 +7,22 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FilterableAnonymousResourceCollection extends AnonymousResourceCollection
 {
-    public ?array $onlyFields = null;
+    public ?array $only = [];
 
-    public function __construct($resource, $collects, ?array $onlyFields = null)
+    public function __construct($resource, $collects, ?array $only = [])
     {
-        $this->onlyFields = $onlyFields;
+        $this->only = $only;
         parent::__construct($resource, $collects);
     }
 
     public function toArray(Request $request)
     {
-        return $this->collection->map->toArray($request, $this->onlyFields)->all();
+        return $this->collection->map->only($this->only)->map->toArray($request)->all();
     }
 
-    public function only(array $onlyFields)
+    public function only(array $only)
     {
-        $this->onlyFields = $onlyFields;
+        $this->only = $only;
 
         return $this;
     }
