@@ -22,6 +22,47 @@ let form = useForm({
         variants: [],
     },
 });
+
+function addVariantToOrder(variant) {
+    const existingVariant = variantAlreadyInOrder(variant);
+    if (existingVariant) {
+        existingVariant.quantity = parseInt(existingVariant.quantity) + 1;
+        return;
+    }
+    variant.quantity = 1;
+    form.order.variants.push(variant);
+}
+
+function variantAlreadyInOrder(variant) {
+    return form.order.variants.find(
+        (orderVariant) => orderVariant.id === variant.id,
+    );
+}
+
+function getTotalDiscount() {
+    return form.order.variants.reduce(
+        (total, variant) => total + (variant.discount ?? 0) * variant.quantity,
+        0,
+    );
+}
+
+function getTotalTax() {
+    return form.order.variants.reduce(
+        (total, variant) => total + (variant.tax ?? 0) * variant.quantity,
+        0,
+    );
+}
+
+function getSubTotal() {
+    return form.order.variants.reduce(
+        (total, variant) => total + variant.price * variant.quantity,
+        0,
+    );
+}
+
+function getTotal() {
+    return getSubTotal() - getTotalDiscount();
+}
 </script>
 
 <template>
@@ -111,7 +152,12 @@ let form = useForm({
                                 >
                             </td>
                             <td class="border border-gray-300 px-2 py-1">
-                                x{{ variant.quantity ?? 1 }}
+                                x
+                                <input
+                                    type="number"
+                                    v-model="variant.quantity"
+                                    class="rounded"
+                                />
                             </td>
                             <td class="border border-gray-300 px-2 py-1">
                                 {{ formatPrice(variant.price) }}
@@ -125,19 +171,49 @@ let form = useForm({
                             <td class="border border-gray-300 px-2 py-1">
                                 {{
                                     formatPrice(
-                                        variant.quantity ?? 1 * variant.price,
+                                        variant.quantity * variant.price,
                                     )
                                 }}
                             </td>
                             <td class="border border-gray-300 px-2 py-1">
                                 {{
                                     formatPrice(
-                                        variant.quantity ?? 1 * variant.price,
+                                        variant.quantity * variant.price,
                                     )
                                 }}
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="6"></th>
+                            <th>Total Tax:</th>
+                            <th>
+                                {{ formatPrice(getTotalTax()) }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="6"></th>
+                            <th>Total Discount:</th>
+                            <th>
+                                {{ formatPrice(getTotalDiscount()) }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="6"></th>
+                            <th>Subtotal:</th>
+                            <th>
+                                {{ formatPrice(getSubTotal()) }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="6"></th>
+                            <th>Total:</th>
+                            <th>
+                                {{ formatPrice(getTotal()) }}
+                            </th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
 
@@ -204,7 +280,7 @@ let form = useForm({
                                 v-for="variant in productPicker.selectedProduct
                                     .variants"
                                 :key="variant.id"
-                                @click="form.order.variants.push(variant)"
+                                @click="addVariantToOrder(variant)"
                             >
                                 {{ variant.sku }}
                             </button>
