@@ -43,7 +43,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(['customer', 'status', 'items'])->paginate(10);
+        $orders = Order::with(['customer', 'status', 'items'])->paginate(50);
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
@@ -80,14 +80,10 @@ class OrderController extends Controller
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'status_id' => 'required|exists:order_statuses,id',
-            'shipping_address' => 'required|array',
-            'billing_address' => 'nullable|array',
             'notes' => 'nullable|string',
-            'items' => 'required|array',
-            'items.*.variant_id' => 'required|exists:variants,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.tax_amount' => 'nullable|numeric|min:0',
-            'items.*.discount_amount' => 'nullable|numeric|min:0',
+            'order.variants' => 'required|array',
+            'order.variants.*.id' => 'required|exists:variants,id',
+            'order.variants.*.quantity' => 'required|integer|min:1',
         ]);
 
         $this->orderService->createOrder($validated);

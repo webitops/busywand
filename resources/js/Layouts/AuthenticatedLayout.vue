@@ -2,7 +2,7 @@
 import { usePage } from '@inertiajs/vue3';
 import Link from '@/Components/Link.vue';
 
-const user = usePage().props.auth.user;
+const user = usePage().props.auth.user.data;
 </script>
 <template>
     <div class="flex h-full">

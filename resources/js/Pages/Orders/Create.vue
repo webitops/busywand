@@ -23,6 +23,15 @@ let form = useForm({
     },
 });
 
+function saveOrder() {
+    form.post(route('orders.store'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            // form.reset();
+        },
+    });
+}
+
 function addVariantToOrder(variant) {
     const existingVariant = variantAlreadyInOrder(variant);
     if (existingVariant) {
@@ -67,7 +76,7 @@ function getTotal() {
 
 <template>
     <AuthenticatedLayout>
-        <div class="flex h-full max-h-full flex-col justify-between gap-4">
+        <div class="flex h-full max-h-full flex-row justify-between gap-4">
             <div>
                 <h1 class="text-xl font-bold">Create Order</h1>
                 <hr />
@@ -97,6 +106,15 @@ function getTotal() {
                         </option>
                     </select>
                 </label>
+
+                <br />
+                <button
+                    class="mt-4 rounded border bg-blue-500 px-5 py-2 text-white active:bg-red-500 active:text-white"
+                    type="button"
+                    @click.prevent="saveOrder()"
+                >
+                    Save
+                </button>
 
                 <hr />
                 <h1 class="text-xl font-bold">Order summary</h1>
@@ -217,7 +235,7 @@ function getTotal() {
                 </table>
             </div>
 
-            <div class="">
+            <div>
                 <div class="flex flex-col gap-4 p-5">
                     <div class="flex flex-wrap gap-2">
                         <button

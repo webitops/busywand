@@ -42,16 +42,16 @@ class OrderService
                 'shipping_total' => $shippingTotal,
                 'discount_total' => $discountTotal,
                 'total' => 0, // This will be updated after items are added
-                'shipping_address' => $data['shipping_address'],
+                'shipping_address' => $data['shipping_address'] ?? 'n/a',
                 'billing_address' => $data['billing_address'] ?? null,
                 'notes' => $data['notes'] ?? null,
                 'placed_at' => now(),
             ]);
 
             // Add order items
-            $items = $data['items'] ?? [];
+            $items = $data['order']['variants'] ?? [];
             foreach ($items as $item) {
-                $variant = Variant::findOrFail($item['variant_id']);
+                $variant = Variant::findOrFail($item['id']);
                 $unitPrice = $variant->price; // Assuming `price` exists on Variant
                 $quantity = $item['quantity'];
                 $subtotal = $unitPrice * $quantity;
