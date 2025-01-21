@@ -43,7 +43,10 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(['customer', 'status', 'items'])->paginate(50);
+        $orders = Order::query()
+            ->orderBy('created_at', 'desc')
+            ->with(['customer', 'status', 'items'])
+            ->paginate(50);
 
         return Inertia::render('Orders/Index', [
             'orders' => $orders,
