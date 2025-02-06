@@ -75,13 +75,19 @@ module.exports = {
                 'collapsible-down': {
                     from: { height: 0 },
                     to: { height: 'var(--radix-collapsible-content-height)' },
-            'collapsible-up'       'collapsible-up': {
+                },
+                'collapsible-up': {
                     from: { height: 'var(--radix-collapsible-content-height)' },
-                   to: { height:0 },
+                    to: { height: 0 },
                 },
             },
-            animat'accordion-down'  'accordion-down 0.2s ease-out'ion-down 0.2s ease'accordion-up'  'accordion-up 0.2s ease-out'rdion-up 0.2s ease'collapsible-down'  'collapsible-down 0.2s ease-in-out'-down 0.2s ease-in'collapsible-up'  'collapsible-up 0.2s ease-in-out'e-up 0.2s easein-out',
+            animation: {
+                'accordion-down': 'accordion-down 0.2s ease-out',
+                'accordion-up': 'accordion-up 0.2s ease-out',
+                'collapsible-down': 'collapsible-down 0.2s ease-in-out',
+                'collapsible-up': 'collapsible-up 0.2s ease-in-out',
             },
         },
-    },    plugins: [animate],
+    },
+    plugins: [animate],
 };
