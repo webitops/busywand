@@ -3,7 +3,7 @@
         <h1 class="text-xl font-bold">Manage Categories</h1>
         <!-- Create Form -->
         <form @submit.prevent="createCategory">
-            <input
+            <Input
                 v-model="form.name"
                 type="text"
                 placeholder="Category name"
@@ -14,13 +14,9 @@
                 {{ form.errors.name }}
             </div>
             <br />
-            <button
-                type="submit"
-                :disabled="form.processing"
-                class="mt-2 bg-blue-500 px-3 py-1 text-white disabled:opacity-50"
-            >
+            <Button type="submit" :disabled="form.processing">
                 {{ form.processing ? 'Adding...' : 'Add' }}
-            </button>
+            </Button>
         </form>
         <!-- Category List -->
         <ul class="mt-4">
@@ -46,6 +42,8 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Button } from '@/Components/ui/button/index.js';
+import { Input } from '@/Components/ui/input/index.js';
 
 defineProps({
     categories: {
