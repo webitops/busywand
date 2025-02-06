@@ -30,9 +30,8 @@ class ProductController extends Controller
         $products = Product::with(
             'variants.options.option',
             'variants.product',
-        )->paginate(10);
+        )->paginate(50);
 
-        //        dd($products[0]->variants[0]->options[0]->option->name, []);
         return Inertia::render('Products/Index', [
             'products' => ProductResource::collection($products)
                 ->only([
@@ -93,10 +92,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        sleep(1);
-
-        return to_route('products.index');
-        // Ensure related resources are deleted (e.g., variants)
         $product->variants()->delete();
         $product->delete();
 
