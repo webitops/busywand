@@ -1,4 +1,5 @@
 <script setup>
+import { Button } from '@/Components/ui/button/index.js';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 </script>
@@ -6,5 +7,8 @@ import { Head } from '@inertiajs/vue3';
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout> Dashboard </AuthenticatedLayout>
+    <AuthenticatedLayout>
+        Dashboard
+        <Button>Test button</Button>
+    </AuthenticatedLayout>
 </template>
