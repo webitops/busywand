@@ -70,6 +70,10 @@ const mode = useColorMode();
                     >
                         <Link
                             :href="route('dashboard')"
+                            :class="{
+                                'font-bold text-primary':
+                                    route().current('dashboard'),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <Home class="h-4 w-4" />
@@ -77,6 +81,10 @@ const mode = useColorMode();
                         </Link>
                         <Link
                             :href="route('orders.index')"
+                            :class="{
+                                'font-bold text-primary':
+                                    route().current('orders.index'),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <ShoppingCart class="h-4 w-4" />
@@ -89,6 +97,10 @@ const mode = useColorMode();
                         </Link>
                         <Link
                             :href="route('products.index')"
+                            :class="{
+                                'font-bold text-primary':
+                                    route().current('products.index'),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <Package class="h-4 w-4" />
@@ -96,6 +108,10 @@ const mode = useColorMode();
                         </Link>
                         <Link
                             :href="route('categories.index')"
+                            :class="{
+                                'font-bold text-primary':
+                                    route().current('categories.index'),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <Boxes class="h-4 w-4" />
@@ -103,6 +119,10 @@ const mode = useColorMode();
                         </Link>
                         <Link
                             :href="route('customers.index')"
+                            :class="{
+                                'font-bold text-primary':
+                                    route().current('customers.index'),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <Users class="h-4 w-4" />
@@ -110,6 +130,11 @@ const mode = useColorMode();
                         </Link>
                         <Link
                             :href="route('customer_groups.index')"
+                            :class="{
+                                'font-bold text-primary': route().current(
+                                    'customer_groups.index',
+                                ),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <TrendingUpDown class="h-4 w-4" />
@@ -117,6 +142,11 @@ const mode = useColorMode();
                         </Link>
                         <Link
                             :href="route('order-statuses.index')"
+                            :class="{
+                                'font-bold text-primary': route().current(
+                                    'order-statuses.index',
+                                ),
+                            }"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                         >
                             <CircleFadingArrowUp class="h-4 w-4" />
@@ -159,6 +189,10 @@ const mode = useColorMode();
                         <nav class="grid gap-2 text-lg font-medium">
                             <Link
                                 :href="route('dashboard')"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('dashboard'),
+                                }"
                                 class="flex items-center gap-2 text-lg font-semibold"
                             >
                                 <Package2 class="h-6 w-6" />
@@ -166,6 +200,10 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('dashboard')"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('dashboard'),
+                                }"
                                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                             >
                                 <Home class="h-5 w-5" />
@@ -173,7 +211,11 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('orders.index')"
-                                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('orders.index'),
+                                }"
+                                class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground"
                             >
                                 <ShoppingCart class="h-5 w-5" />
                                 Orders
@@ -185,6 +227,10 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('products.index')"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('products.index'),
+                                }"
                                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                             >
                                 <Package class="h-5 w-5" />
@@ -192,6 +238,10 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('categories.index')"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('categories.index'),
+                                }"
                                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                             >
                                 <Boxes class="h-5 w-5" />
@@ -199,6 +249,10 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('customers.index')"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('customers.index'),
+                                }"
                                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                             >
                                 <Users class="h-5 w-5" />
@@ -206,6 +260,11 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('customer_groups.index')"
+                                :class="{
+                                    'font-bold text-primary': route().current(
+                                        'customer_groups.index',
+                                    ),
+                                }"
                                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                             >
                                 <TrendingUpDown class="h-5 w-5" />
@@ -213,6 +272,11 @@ const mode = useColorMode();
                             </Link>
                             <Link
                                 :href="route('order-statuses.index')"
+                                :class="{
+                                    'font-bold text-primary': route().current(
+                                        'order-statuses.index',
+                                    ),
+                                }"
                                 class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                             >
                                 <CircleFadingArrowUp class="h-5 w-5" />
@@ -290,14 +354,24 @@ const mode = useColorMode();
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>
-                            <Link :href="route('profile.edit')">Profile</Link>
+                            <Link
+                                :href="route('profile.edit')"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('profile.edit'),
+                                }"
+                                >Profile
+                            </Link>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                        <DropdownMenuItem>Support</DropdownMenuItem>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <Link :href="route('logout')" method="post"
+                            <Link
+                                :href="route('logout')"
+                                method="post"
+                                :class="{
+                                    'font-bold text-primary':
+                                        route().current('logout'),
+                                }"
                                 >Logout
                             </Link>
                         </DropdownMenuItem>

@@ -54,10 +54,14 @@ defineProps({
                         <Link :href="route('register')">Register</Link>
                     </Button>
                 </div>
-                <p v-if="page.props.auth.user">
-                    Go to
-                    <Link :href="route('dashboard')">Dashboard</Link>
-                </p>
+                <div v-if="page.props.auth.user">
+                    <p class="mb-6 text-sm text-muted-foreground">
+                        You are already logged in, go to
+                        <Button variant="link" class="p-0">
+                            <Link :href="route('dashboard')">Dashboard</Link>
+                        </Button>
+                    </p>
+                </div>
             </CardContent>
         </Card>
     </div>
