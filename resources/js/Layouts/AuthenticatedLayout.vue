@@ -89,11 +89,6 @@ const mode = useColorMode();
                         >
                             <ShoppingCart class="h-4 w-4" />
                             Orders
-                            <Badge
-                                class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-                            >
-                                6
-                            </Badge>
                         </Link>
                         <Link
                             :href="route('products.index')"
