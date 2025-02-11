@@ -203,14 +203,14 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
-    UsersIcon
+    UsersIcon,
     PackageIcon,
     DollarSignIcon,
     ShoppingCartIcon,
 } from 'lucide-vue-next';
 
 const props = defineProps({
-    metrics Object,
+    metrics: Object,
     recentOrders: Array,
     ordersByStatus: Array,
     topCustomers: Array,
@@ -220,7 +220,7 @@ function formatNumber(number) {
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-    ).format(number);
+    }).format(number);
 }
 
 function getInitials(name) {
@@ -228,7 +228,7 @@ function getInitials(name) {
         .split(' ')
         .map((word) => word[0])
         .join('')
-        .toUpperase()
+        .toUpperCase()
         .slice(0, 2);
 }
 </script>
