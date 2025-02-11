@@ -1,21 +1,380 @@
+<template>
+    <AuthenticatedLayout>
+        <div class="container mx-auto py-6">
+            <div class="flex gap-6">
+                <!-- Order Details Section -->
+                <div class="w-2/3">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Create New Order</CardTitle>
+                            <CardDescription
+                                >Add items and configure order details
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div class="grid gap-4">
+                                <!-- Customer Selection -->
+                                <div class="space-y-2">
+                                    <Label>Customer</Label>
+                                    <Select v-model="form.customer_id">
+                                        <SelectTrigger>
+                                            <SelectValue
+                                                placeholder="Select a customer"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem
+                                                v-for="customer in customers.data"
+                                                :key="customer.id"
+                                                :value="customer.id"
+                                            >
+                                                {{ customer.name }}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <!-- Status Selection -->
+                                <div class="space-y-2">
+                                    <Label>Order Status</Label>
+                                    <Select v-model="form.status_id">
+                                        <SelectTrigger>
+                                            <SelectValue
+                                                placeholder="Select status"
+                                            />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem
+                                                v-for="status in statuses"
+                                                :key="status.id"
+                                                :value="status.id"
+                                            >
+                                                {{ status.name }}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <!-- Order Items Table -->
+                                <div class="mt-6">
+                                    <h3 class="mb-4 font-medium">
+                                        Order Items
+                                    </h3>
+                                    <div
+                                        v-if="form.order.variants.length === 0"
+                                        class="py-8 text-center text-muted-foreground"
+                                    >
+                                        <PackageIcon
+                                            class="mx-auto mb-2 h-12 w-12 opacity-50"
+                                        />
+                                        <p>No items added to order yet</p>
+                                    </div>
+                                    <Table v-else>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Product</TableHead>
+                                                <TableHead>Quantity</TableHead>
+                                                <TableHead>Price</TableHead>
+                                                <TableHead>Tax</TableHead>
+                                                <TableHead>Discount</TableHead>
+                                                <TableHead>Total</TableHead>
+                                                <TableHead></TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow
+                                                v-for="variant in form.order
+                                                    .variants"
+                                                :key="variant.id"
+                                            >
+                                                <TableCell>
+                                                    <div>
+                                                        <p class="font-medium">
+                                                            {{
+                                                                variant.product
+                                                                    .name
+                                                            }}
+                                                        </p>
+                                                        <p
+                                                            class="text-sm text-muted-foreground"
+                                                        >
+                                                            SKU:
+                                                            {{ variant.sku }}
+                                                        </p>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Input
+                                                        type="number"
+                                                        v-model="
+                                                            variant.quantity
+                                                        "
+                                                        class="w-20"
+                                                        min="1"
+                                                    />
+                                                </TableCell>
+                                                <TableCell
+                                                    >{{
+                                                        formatPrice(
+                                                            variant.price,
+                                                        )
+                                                    }}
+                                                </TableCell>
+                                                <TableCell
+                                                    >{{
+                                                        formatPrice(
+                                                            variant.tax ?? 0,
+                                                        )
+                                                    }}
+                                                </TableCell>
+                                                <TableCell
+                                                    >{{
+                                                        formatPrice(
+                                                            variant.discount ??
+                                                                0,
+                                                        )
+                                                    }}
+                                                </TableCell>
+                                                <TableCell class="font-medium">
+                                                    {{
+                                                        formatPrice(
+                                                            variant.quantity *
+                                                                variant.price,
+                                                        )
+                                                    }}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        @click="
+                                                            removeVariant(
+                                                                variant,
+                                                            )
+                                                        "
+                                                    >
+                                                        <TrashIcon
+                                                            class="h-4 w-4"
+                                                        />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+
+                                    <!-- Order Summary -->
+                                    <div
+                                        v-if="form.order.variants.length > 0"
+                                        class="mt-6 space-y-2"
+                                    >
+                                        <div class="flex justify-end text-sm">
+                                            <span class="w-24">Subtotal:</span>
+                                            <span class="w-32 text-right">{{
+                                                formatPrice(getSubTotal())
+                                            }}</span>
+                                        </div>
+                                        <div class="flex justify-end text-sm">
+                                            <span class="w-24">Tax:</span>
+                                            <span class="w-32 text-right">{{
+                                                formatPrice(getTotalTax())
+                                            }}</span>
+                                        </div>
+                                        <div class="flex justify-end text-sm">
+                                            <span class="w-24">Discount:</span>
+                                            <span
+                                                class="w-32 text-right text-destructive"
+                                            >
+                                                -{{
+                                                    formatPrice(
+                                                        getTotalDiscount(),
+                                                    )
+                                                }}
+                                            </span>
+                                        </div>
+                                        <Separator />
+                                        <div
+                                            class="flex justify-end font-medium"
+                                        >
+                                            <span class="w-24">Total:</span>
+                                            <span class="w-32 text-right">{{
+                                                formatPrice(getTotal())
+                                            }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                        <CardFooter>
+                            <Button
+                                @click="saveOrder"
+                                :disabled="form.processing"
+                            >
+                                <CheckIcon
+                                    v-if="!form.processing"
+                                    class="mr-2 h-4 w-4"
+                                />
+                                <Loader2Icon
+                                    v-else
+                                    class="mr-2 h-4 w-4 animate-spin"
+                                />
+                                Create Order
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+
+                <!-- Product Picker Section -->
+                <div class="w-1/3">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add Products</CardTitle>
+                            <CardDescription
+                                >Select products to add to the order
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <!-- Categories -->
+                            <div class="space-y-4">
+                                <Label>Categories</Label>
+                                <div class="flex flex-wrap gap-2">
+                                    <Badge
+                                        v-for="category in categories.data"
+                                        :key="category.id"
+                                        :variant="
+                                            productPicker.selectedCategory
+                                                ?.id === category.id
+                                                ? 'default'
+                                                : 'outline'
+                                        "
+                                        class="cursor-pointer"
+                                        @click="selectCategory(category)"
+                                    >
+                                        {{ category.name }}
+                                    </Badge>
+                                </div>
+
+                                <!-- Products -->
+                                <div
+                                    v-if="productPicker.selectedCategory"
+                                    class="mt-6"
+                                >
+                                    <Label>Products</Label>
+                                    <div class="mt-2 grid gap-2">
+                                        <Button
+                                            v-for="product in productPicker
+                                                .selectedCategory.products"
+                                            :key="product.id"
+                                            variant="outline"
+                                            :class="{
+                                                'border-primary':
+                                                    productPicker
+                                                        .selectedProduct?.id ===
+                                                    product.id,
+                                            }"
+                                            @click="selectProduct(product)"
+                                        >
+                                            {{ product.name }}
+                                            <Badge
+                                                variant="secondary"
+                                                class="ml-2"
+                                            >
+                                                {{
+                                                    product.variants?.length ??
+                                                    0
+                                                }}
+                                                variants
+                                            </Badge>
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <!-- Variants -->
+                                <div
+                                    v-if="productPicker.selectedProduct"
+                                    class="mt-6"
+                                >
+                                    <Label>Variants</Label>
+                                    <div class="mt-2 grid grid-cols-2 gap-2">
+                                        <Button
+                                            v-for="variant in productPicker
+                                                .selectedProduct.variants"
+                                            :key="variant.id"
+                                            size="sm"
+                                            variant="outline"
+                                            @click="addVariantToOrder(variant)"
+                                        >
+                                            {{ variant.sku }}
+                                            <PlusIcon class="ml-2 h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
+
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+// Layout and Core
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { ref } from 'vue';
-import { formatPrice } from '../../Helpers/helpers.js';
+import { useForm } from '@inertiajs/vue3';
+import { formatPrice } from '@/Helpers/helpers.js';
+
+// UI Components
+import { Button } from '@/Components/ui/button';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/Components/ui/card';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
+import { Input } from '@/Components/ui/input';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
+import { Badge } from '@/Components/ui/badge';
+import { Label } from '@/Components/ui/label';
+import { Separator } from '@/Components/ui/separator';
+
+// Icons
+import {
+    CheckIcon,
+    Loader2Icon,
+    PackageIcon,
+    PlusIcon,
+    TrashIcon,
+} from 'lucide-vue-next';
 
 const props = defineProps({
-    statuses: Object,
+    statuses: Array,
     customers: Object,
     categories: Object,
 });
 
-let productPicker = ref({
-    selectedCategory: props.categories.data[0],
-    selectedProduct: props.categories.data[0]?.products[0],
+const productPicker = ref({
+    selectedCategory: null,
+    selectedProduct: null,
 });
 
-let form = useForm({
+const form = useForm({
     customer_id: null,
     status_id: props.statuses[0]?.id ?? null,
     order: {
@@ -72,242 +431,23 @@ function getSubTotal() {
 function getTotal() {
     return getSubTotal() - getTotalDiscount();
 }
+
+function selectCategory(category) {
+    productPicker.value.selectedProduct = null;
+    productPicker.value.selectedCategory =
+        productPicker.value.selectedCategory?.id === category.id
+            ? null
+            : category;
+}
+
+function selectProduct(product) {
+    productPicker.value.selectedProduct =
+        productPicker.value.selectedProduct?.id === product.id ? null : product;
+}
+
+function removeVariant(variant) {
+    form.order.variants = form.order.variants.filter(
+        (v) => v.id !== variant.id,
+    );
+}
 </script>
-
-<template>
-    <AuthenticatedLayout>
-        <div class="flex h-full max-h-full flex-row justify-between gap-4">
-            <div>
-                <h1 class="text-xl font-bold">Create Order</h1>
-                <hr />
-                <label
-                    >Default Status:
-                    <select v-model="form.status_id">
-                        <option
-                            v-for="status in statuses"
-                            :key="status.id"
-                            :value="status.id"
-                        >
-                            {{ status.name }}
-                        </option>
-                    </select>
-                </label>
-                <br />
-
-                <label>
-                    Customer
-                    <select v-model="form.customer_id">
-                        <option
-                            v-for="customer in customers.data"
-                            :key="customer.id"
-                            :value="customer.id"
-                        >
-                            {{ customer.name }}
-                        </option>
-                    </select>
-                </label>
-
-                <br />
-                <button
-                    class="mt-4 rounded border bg-blue-500 px-5 py-2 text-white active:bg-red-500 active:text-white"
-                    type="button"
-                    @click.prevent="saveOrder()"
-                >
-                    Save
-                </button>
-
-                <hr />
-                <h1 class="text-xl font-bold">Order summary</h1>
-                <p
-                    class="w-full p-4 text-center italic text-gray-700"
-                    v-if="form.order.variants.length <= 0"
-                >
-                    Add products to the order...
-                </p>
-                <table
-                    v-if="form.order.variants.length > 0"
-                    class="table-auto border-collapse border border-gray-300"
-                >
-                    <thead>
-                        <tr>
-                            <th class="border border-gray-300 px-2 py-1">#</th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Item Name
-                                <span class="text-xs uppercase">(SKU)</span>
-                            </th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Quantity
-                            </th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Price
-                            </th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Tax
-                            </th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Discount
-                            </th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Subtotal
-                            </th>
-                            <th class="border border-gray-300 px-2 py-1">
-                                Total
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(variant, key) in form.order.variants"
-                            :key="variant.id"
-                        >
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{ key + 1 }}
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{ variant.product.name }}
-                                <span class="text-xs uppercase"
-                                    >({{ variant.sku }})</span
-                                >
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                x
-                                <input
-                                    type="number"
-                                    v-model="variant.quantity"
-                                    class="rounded"
-                                />
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{ formatPrice(variant.price) }}
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{ formatPrice(variant.tax ?? 0) }}
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{ formatPrice(variant.discount ?? 0) }}
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{
-                                    formatPrice(
-                                        variant.quantity * variant.price,
-                                    )
-                                }}
-                            </td>
-                            <td class="border border-gray-300 px-2 py-1">
-                                {{
-                                    formatPrice(
-                                        variant.quantity * variant.price,
-                                    )
-                                }}
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="6"></th>
-                            <th>Total Tax:</th>
-                            <th>
-                                {{ formatPrice(getTotalTax()) }}
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="6"></th>
-                            <th>Total Discount:</th>
-                            <th>
-                                {{ formatPrice(getTotalDiscount()) }}
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="6"></th>
-                            <th>Subtotal:</th>
-                            <th>
-                                {{ formatPrice(getSubTotal()) }}
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="6"></th>
-                            <th>Total:</th>
-                            <th>
-                                {{ formatPrice(getTotal()) }}
-                            </th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <div>
-                <div class="flex flex-col gap-4 p-5">
-                    <div class="flex flex-wrap gap-2">
-                        <button
-                            :class="{
-                                'border-red-500':
-                                    productPicker.selectedCategory?.id ===
-                                    category.id,
-                            }"
-                            @click="
-                                productPicker.selectedProduct = null;
-                                productPicker.selectedCategory?.id ===
-                                category.id
-                                    ? (productPicker.selectedCategory = null)
-                                    : (productPicker.selectedCategory =
-                                          category);
-                            "
-                            class="cursor-pointer rounded border px-3 py-1 hover:bg-gray-100"
-                            v-for="category in categories.data"
-                            :key="category.id"
-                        >
-                            {{ category.name }}
-                        </button>
-                    </div>
-                    <hr />
-                    <div
-                        class="flex flex-wrap gap-2"
-                        v-if="productPicker.selectedCategory"
-                    >
-                        <button
-                            :class="{
-                                'border-red-500':
-                                    productPicker.selectedProduct?.id ===
-                                    product.id,
-                            }"
-                            @click="
-                                productPicker.selectedProduct?.id === product.id
-                                    ? (productPicker.selectedProduct = null)
-                                    : (productPicker.selectedProduct = product)
-                            "
-                            class="cursor-pointer rounded border px-3 py-1 hover:bg-gray-100"
-                            v-for="product in productPicker.selectedCategory
-                                .products"
-                            :key="product.id"
-                        >
-                            {{ product.name }} (Variants:
-                            {{ product.variants?.length ?? 0 }})
-                        </button>
-                    </div>
-                    <div v-if="productPicker.selectedProduct">
-                        <span
-                            >(Variants:
-                            {{
-                                productPicker.selectedProduct.variants
-                                    ?.length ?? 0
-                            }})</span
-                        >
-                        <div class="flex flex-wrap gap-2">
-                            <button
-                                class="rounded border px-4 py-2 text-xs uppercase hover:bg-gray-100 active:bg-red-500 active:text-white"
-                                v-for="variant in productPicker.selectedProduct
-                                    .variants"
-                                :key="variant.id"
-                                @click="addVariantToOrder(variant)"
-                            >
-                                {{ variant.sku }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </AuthenticatedLayout>
-</template>
-
-<style scoped></style>
