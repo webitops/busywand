@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -45,5 +46,13 @@ class Customer extends Model
     public function customerGroups(): BelongsToMany
     {
         return $this->belongsToMany(CustomerGroup::class, 'customer_customer_group');
+    }
+
+    /**
+     * Get the orders associated with the customer.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }
