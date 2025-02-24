@@ -140,7 +140,7 @@ import { Loader2Icon, PlusIcon, TrashIcon } from 'lucide-vue-next';
 defineProps({
     categories: {
         type: Object,
-        required: tre,
+        required: true,
     },
 });
 
