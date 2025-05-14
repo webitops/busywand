@@ -58,6 +58,14 @@ class ProductController extends Controller
         ]);
     }
 
+    //create product
+
+    public function create()
+    {
+        // This tells Inertia to render resources/js/Pages/Products/Create.vue
+        return Inertia::render('Products/Create');
+    }
+
     /**
      * Store a new product with variants.
      *
