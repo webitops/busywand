@@ -58,6 +58,14 @@ class ProductController extends Controller
         ]);
     }
 
+    //create product
+
+    public function create()
+    {
+        // This tells Inertia to render resources/js/Pages/Products/Create.vue
+        return Inertia::render('Products/Create');
+    }
+
     /**
      * Store a new product with variants.
      *
@@ -75,12 +83,15 @@ class ProductController extends Controller
             'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.stock_quantity' => 'required|integer|min:0',
             'variants.*.options' => 'nullable|array',
+            'variants.*.options.*' => 'required|string',
         ]);
 
         $productDTO = ProductDTO::fromRequest($data);
-        $product = $this->productService->createProduct($productDTO);
 
-        return redirect()->route('products.index')
+        $this->productService->createProduct($productDTO);
+
+
+        return to_route('products.index')
             ->with('success', 'Product created successfully!');
     }
 
