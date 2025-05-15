@@ -49,15 +49,53 @@ const form = useForm({
     ]
 });
 
-// Define common option types for products
-const commonOptions = [
-    { name: 'color', values: ['Red', 'Blue', 'Green', 'Black', 'White'] },
-    { name: 'size', values: ['S', 'M', 'L', 'XL', 'XXL'] },
-];
 
 // Variables for adding options to variants
 const optionToAdd = ref(null);
 const valueToAdd = ref(null);
+const newOptionName = ref('');
+const newOptionValue = ref('');
+const customOptions = ref([]);
+
+// Add a new option to the customOptions array
+function addCustomOption() {
+    if (!newOptionName.value.trim()) return;
+
+    // Check if option already exists
+    if (!customOptions.value.find(o => o.name === newOptionName.value.trim())) {
+        customOptions.value.push({
+            name: newOptionName.value.trim(),
+            values: []
+        });
+    }
+
+    newOptionName.value = '';
+}
+
+// Add a value to an existing option
+function addValueToOption(optionName) {
+    if (!newOptionValue.value.trim()) return;
+
+    const option = customOptions.value.find(o => o.name === optionName);
+    if (option && !option.values.includes(newOptionValue.value.trim())) {
+        option.values.push(newOptionValue.value.trim());
+    }
+
+    newOptionValue.value = '';
+}
+
+// Remove an option from customOptions
+function removeCustomOption(optionName) {
+    customOptions.value = customOptions.value.filter(o => o.name !== optionName);
+}
+
+// Remove a value from an option
+function removeValueFromOption(optionName, value) {
+    const option = customOptions.value.find(o => o.name === optionName);
+    if (option) {
+        option.values = option.values.filter(v => v !== value);
+    }
+}
 
 // Add an option to a variant
 function addOptionToVariant(variant, optionName, optionValue) {
@@ -95,7 +133,7 @@ const formIsValid = computed(() => {
            form.variants.every(variant => variant.stock_quantity > 0);
 });
 
-// Submit the form
+
 function saveProduct() {
     if (!formIsValid.value) {
         return;
@@ -104,8 +142,7 @@ function saveProduct() {
     form.post(route('products.store'), {
         preserveScroll: true,
         onSuccess: () => {
-            // Redirect to products index with success message
-            window.location.href = route('products.index');
+
         },
     });
 }
@@ -118,7 +155,7 @@ function saveProduct() {
                 <div class="flex items-center gap-4">
                     <Link :href="route('products.index')" class="inline-flex">
                         <Button variant="outline" size="icon" class="mr-2">
-                            <ArrowLeftIcon class="h-4 w-4" />
+                            <ArrowLeftIcon class="h-4 w-4"></ArrowLeftIcon>
                         </Button>
                     </Link>
                     <h1 class="text-3xl font-bold tracking-tight">Create New Product</h1>
@@ -132,40 +169,113 @@ function saveProduct() {
                 </CardHeader>
                 <CardContent>
                     <div class="grid gap-4">
-                        <!-- Product Name -->
                         <div class="space-y-2">
                             <Label for="name">Product Name</Label>
                             <Input id="name" v-model="form.name" placeholder="Enter product name" />
                             <div v-if="form.errors.name" class="text-sm text-red-500">{{ form.errors.name }}</div>
                         </div>
-
-                        <!-- Product SKU -->
                         <div class="space-y-2">
                             <Label for="sku">SKU</Label>
                             <Input id="sku" v-model="form.sku" placeholder="Enter product SKU" />
                             <div v-if="form.errors.sku" class="text-sm text-red-500">{{ form.errors.sku }}</div>
                         </div>
 
-                        <!-- Product Description -->
                         <div class="space-y-2">
                             <Label for="description">Description</Label>
                             <Textarea id="description" v-model="form.description" placeholder="Enter product description" />
                             <div v-if="form.errors.description" class="text-sm text-red-500">{{ form.errors.description }}</div>
                         </div>
 
-                        <!-- Product Price -->
                         <div class="space-y-2">
                             <Label for="price">Price</Label>
                             <Input id="price" type="number" step="0.01" v-model="form.price" placeholder="Enter product price" />
                             <div v-if="form.errors.price" class="text-sm text-red-500">{{ form.errors.price }}</div>
                         </div>
 
-                        <!-- Variants Section -->
+                        <div class="mt-6">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-medium">Product Options</h3>
+                            </div>
+
+                            <div class="mt-4 p-4 border rounded-md">
+                                <h4 class="font-medium mb-2">Add New Option</h4>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <Label for="new-option-name">Option Name</Label>
+                                        <Input id="new-option-name" v-model="newOptionName" placeholder="e.g. Color, Size" />
+                                    </div>
+                                    <div class="flex items-end">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            class="mb-1 w-full"
+                                            @click="addCustomOption"
+                                            :disabled="!newOptionName.trim()"
+                                        >
+                                            <PlusIcon class="mr-2 h-4 w-4"></PlusIcon>
+                                            Add Option
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="customOptions.length > 0" class="mt-4">
+                                <div v-for="option in customOptions" :key="option.name" class="mb-4 p-4 border rounded-md">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <h4 class="font-medium">{{ option.name }}</h4>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            @click="removeCustomOption(option.name)"
+                                        >
+                                            <TrashIcon class="h-4 w-4"></TrashIcon>
+                                        </Button>
+                                    </div>
+                                    <div class="mb-2">
+                                        <Label>Values</Label>
+                                        <div class="flex flex-wrap gap-2 mt-1">
+                                            <div
+                                                v-for="value in option.values"
+                                                :key="value"
+                                                class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs"
+                                            >
+                                                <span class="dark:text-black">{{ value }}</span>
+                                                <button
+                                                    type="button"
+                                                    class="ml-1 text-gray-500 hover:text-gray-700"
+                                                    @click="removeValueFromOption(option.name, value)"
+                                                >
+                                                    <TrashIcon class="h-3 w-3"></TrashIcon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-2 mt-2">
+                                        <div>
+                                            <Input v-model="newOptionValue" placeholder="Add new value" />
+                                        </div>
+                                        <div>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                class="w-full"
+                                                @click="addValueToOption(option.name)"
+                                                :disabled="!newOptionValue.trim()"
+                                            >
+                                                <PlusIcon class="mr-2 h-4 w-4"></PlusIcon>
+                                                Add Value
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mt-6">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-lg font-medium">Product Variants</h3>
                                 <Button variant="outline" size="sm" @click="addVariant">
-                                    <PlusIcon class="mr-2 h-4 w-4" />
+                                    <PlusIcon class="mr-2 h-4 w-4"></PlusIcon>
                                     Add Variant
                                 </Button>
                             </div>
@@ -174,12 +284,11 @@ function saveProduct() {
                                 <div class="flex justify-between">
                                     <h4 class="font-medium">Variant {{ index + 1 }}</h4>
                                     <Button v-if="form.variants.length > 1" variant="ghost" size="icon" @click="removeVariant(index)">
-                                        <TrashIcon class="h-4 w-4" />
+                                        <TrashIcon class="h-4 w-4"></TrashIcon>
                                     </Button>
                                 </div>
 
                                 <div class="mt-2 grid gap-4 md:grid-cols-3">
-                                    <!-- Variant SKU -->
                                     <div class="space-y-2">
                                         <Label :for="`variant-sku-${index}`">SKU</Label>
                                         <Input :id="`variant-sku-${index}`" v-model="variant.sku" placeholder="Variant SKU" />
@@ -188,7 +297,6 @@ function saveProduct() {
                                         </div>
                                     </div>
 
-                                    <!-- Variant Price -->
                                     <div class="space-y-2">
                                         <Label :for="`variant-price-${index}`">Price</Label>
                                         <Input :id="`variant-price-${index}`" type="number" step="0.01" v-model="variant.price" placeholder="Variant price" />
@@ -197,7 +305,6 @@ function saveProduct() {
                                         </div>
                                     </div>
 
-                                    <!-- Variant Stock -->
                                     <div class="space-y-2">
                                         <Label :for="`variant-stock-${index}`">Stock Quantity</Label>
                                         <Input :id="`variant-stock-${index}`" type="number" v-model="variant.stock_quantity" placeholder="Stock quantity" />
@@ -207,7 +314,6 @@ function saveProduct() {
                                     </div>
                                 </div>
 
-                                <!-- Variant Options -->
                                 <div class="mt-4 border-t pt-4">
                                     <div class="flex items-center justify-between mb-2">
                                         <h5 class="text-sm font-medium flex items-center">
@@ -216,26 +322,24 @@ function saveProduct() {
                                         </h5>
                                     </div>
 
-                                    <!-- Current Options -->
                                     <div v-if="Object.keys(variant.options).length > 0" class="mb-3 flex flex-wrap gap-2">
                                         <div
                                             v-for="(value, name) in variant.options"
                                             :key="name"
                                             class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs"
                                         >
-                                            <span class="font-medium">{{ name }}:</span>
-                                            <span class="ml-1">{{ value }}</span>
+                                            <span class="font-medium dark:text-black">{{ name }}:</span>
+                                            <span class="ml-1 dark:text-black">{{ value }}</span>
                                             <button
                                                 type="button"
                                                 class="ml-1 text-gray-500 hover:text-gray-700"
                                                 @click="removeOptionFromVariant(variant, name)"
                                             >
-                                                <TrashIcon class="h-3 w-3" />
+                                                <TrashIcon class="h-3 w-3"></TrashIcon>
                                             </button>
                                         </div>
                                     </div>
 
-                                    <!-- Add Option -->
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <Select v-model="optionToAdd" placeholder="Select option">
@@ -244,7 +348,7 @@ function saveProduct() {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem
-                                                        v-for="option in commonOptions"
+                                                        v-for="option in customOptions"
                                                         :key="option.name"
                                                         :value="option.name"
                                                     >
@@ -260,7 +364,7 @@ function saveProduct() {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem
-                                                        v-for="value in optionToAdd ? commonOptions.find(o => o.name === optionToAdd)?.values || [] : []"
+                                                        v-for="value in optionToAdd ? customOptions.find(o => o.name === optionToAdd)?.values || [] : []"
                                                         :key="value"
                                                         :value="value"
                                                     >
@@ -276,7 +380,7 @@ function saveProduct() {
                                             @click="addOptionToVariant(variant, optionToAdd, valueToAdd); optionToAdd = null; valueToAdd = null;"
                                             :disabled="!optionToAdd || !valueToAdd"
                                         >
-                                            <PlusIcon class="mr-2 h-4 w-4" />
+                                            <PlusIcon class="mr-2 h-4 w-4"></PlusIcon>
                                             Add Option
                                         </Button>
                                     </div>
@@ -287,8 +391,8 @@ function saveProduct() {
                 </CardContent>
                 <CardFooter>
                     <Button @click="saveProduct" :disabled="form.processing">
-                        <CheckIcon v-if="!form.processing" class="mr-2 h-4 w-4" />
-                        <Loader2Icon v-else class="mr-2 h-4 w-4 animate-spin" />
+                        <CheckIcon v-if="!form.processing" class="mr-2 h-4 w-4"></CheckIcon>
+                        <Loader2Icon v-else class="mr-2 h-4 w-4 animate-spin"></Loader2Icon>
                         Create Product
                     </Button>
                 </CardFooter>
