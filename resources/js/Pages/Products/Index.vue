@@ -3,9 +3,11 @@
         <div class="container mx-auto py-6">
             <header class="mb-6 flex items-center justify-between">
                 <h1 class="text-3xl font-bold tracking-tight">Products</h1>
-                <Button variant="default" :href="route('products.create')">
-                    <PlusIcon class="mr-2 h-4 w-4" />
-                    Add Product
+                <Button as-child>
+                    <Link :href="route('products.create')">
+                        <Plus class="h-6 w-6" />
+                        Add Product
+                    </Link>
                 </Button>
             </header>
 
@@ -111,9 +113,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
     MoreHorizontalIcon,
-    PencilIcon,
-    PlusIcon,
-    TrashIcon,
+    PencilIcon, Plus,
+    TrashIcon
 } from 'lucide-vue-next';
 import { TableRow } from '@/Components/ui/table/index.js';
 import { DropdownMenuTrigger } from '@/Components/ui/dropdown-menu/index.js';
